@@ -7,7 +7,7 @@ type Suma{
 }
 
 type Query{
-  usuarios:[Suma!]!
+  sumas:[Suma!]!
 }
 
 input SumInput {
@@ -23,3 +23,4 @@ type Mutation{
   updateSuma(sumaId:Int!,input:SumInput!):Suma!
   deleteSuma(sumaId: Int!): Boolean!
 }
+

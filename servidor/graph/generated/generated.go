@@ -13,7 +13,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/kissmarkrivas/go_sum/graph/model"
+	"github.com/kissmarkrivas/sumago/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -51,7 +51,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Usuarios func(childComplexity int) int
+		Sumas func(childComplexity int) int
 	}
 
 	Suma struct {
@@ -69,7 +69,7 @@ type MutationResolver interface {
 	DeleteSuma(ctx context.Context, sumaID int) (bool, error)
 }
 type QueryResolver interface {
-	Usuarios(ctx context.Context) ([]*model.Suma, error)
+	Sumas(ctx context.Context) ([]*model.Suma, error)
 }
 
 type executableSchema struct {
@@ -123,12 +123,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateSuma(childComplexity, args["sumaId"].(int), args["input"].(model.SumInput)), true
 
-	case "Query.usuarios":
-		if e.complexity.Query.Usuarios == nil {
+	case "Query.sumas":
+		if e.complexity.Query.Sumas == nil {
 			break
 		}
 
-		return e.complexity.Query.Usuarios(childComplexity), true
+		return e.complexity.Query.Sumas(childComplexity), true
 
 	case "Suma.id":
 		if e.complexity.Suma.ID == nil {
@@ -243,7 +243,7 @@ var sources = []*ast.Source{
 }
 
 type Query{
-  usuarios:[Suma!]!
+  sumas:[Suma!]!
 }
 
 input SumInput {
@@ -258,7 +258,9 @@ type Mutation{
   createSuma(input:SumInput!):Suma!
   updateSuma(sumaId:Int!,input:SumInput!):Suma!
   deleteSuma(sumaId: Int!): Boolean!
-}`, BuiltIn: false},
+}
+
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -272,7 +274,7 @@ func (ec *executionContext) field_Mutation_createSuma_args(ctx context.Context, 
 	var arg0 model.SumInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNSumInput2githubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSumInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSumInput2githubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSumInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -311,7 +313,7 @@ func (ec *executionContext) field_Mutation_updateSuma_args(ctx context.Context, 
 	var arg1 model.SumInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNSumInput2githubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSumInput(ctx, tmp)
+		arg1, err = ec.unmarshalNSumInput2githubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSumInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -401,7 +403,7 @@ func (ec *executionContext) _Mutation_createSuma(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Suma)
 	fc.Result = res
-	return ec.marshalNSuma2ᚖgithubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSuma(ctx, field.Selections, res)
+	return ec.marshalNSuma2ᚖgithubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSuma(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createSuma(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -468,7 +470,7 @@ func (ec *executionContext) _Mutation_updateSuma(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Suma)
 	fc.Result = res
-	return ec.marshalNSuma2ᚖgithubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSuma(ctx, field.Selections, res)
+	return ec.marshalNSuma2ᚖgithubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSuma(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateSuma(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -562,8 +564,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteSuma(ctx context.Context
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_usuarios(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_usuarios(ctx, field)
+func (ec *executionContext) _Query_sumas(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_sumas(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -576,7 +578,7 @@ func (ec *executionContext) _Query_usuarios(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Usuarios(rctx)
+		return ec.resolvers.Query().Sumas(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -590,10 +592,10 @@ func (ec *executionContext) _Query_usuarios(ctx context.Context, field graphql.C
 	}
 	res := resTmp.([]*model.Suma)
 	fc.Result = res
-	return ec.marshalNSuma2ᚕᚖgithubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSumaᚄ(ctx, field.Selections, res)
+	return ec.marshalNSuma2ᚕᚖgithubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSumaᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_usuarios(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_sumas(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -2876,7 +2878,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "usuarios":
+		case "sumas":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -2885,7 +2887,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_usuarios(ctx, field)
+				res = ec._Query_sumas(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -3341,16 +3343,16 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) unmarshalNSumInput2githubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSumInput(ctx context.Context, v interface{}) (model.SumInput, error) {
+func (ec *executionContext) unmarshalNSumInput2githubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSumInput(ctx context.Context, v interface{}) (model.SumInput, error) {
 	res, err := ec.unmarshalInputSumInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSuma2githubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSuma(ctx context.Context, sel ast.SelectionSet, v model.Suma) graphql.Marshaler {
+func (ec *executionContext) marshalNSuma2githubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSuma(ctx context.Context, sel ast.SelectionSet, v model.Suma) graphql.Marshaler {
 	return ec._Suma(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNSuma2ᚕᚖgithubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSumaᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Suma) graphql.Marshaler {
+func (ec *executionContext) marshalNSuma2ᚕᚖgithubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSumaᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Suma) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -3374,7 +3376,7 @@ func (ec *executionContext) marshalNSuma2ᚕᚖgithubᚗcomᚋkissmarkrivasᚋgo
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNSuma2ᚖgithubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSuma(ctx, sel, v[i])
+			ret[i] = ec.marshalNSuma2ᚖgithubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSuma(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3394,7 +3396,7 @@ func (ec *executionContext) marshalNSuma2ᚕᚖgithubᚗcomᚋkissmarkrivasᚋgo
 	return ret
 }
 
-func (ec *executionContext) marshalNSuma2ᚖgithubᚗcomᚋkissmarkrivasᚋgo_sumᚋgraphᚋmodelᚐSuma(ctx context.Context, sel ast.SelectionSet, v *model.Suma) graphql.Marshaler {
+func (ec *executionContext) marshalNSuma2ᚖgithubᚗcomᚋkissmarkrivasᚋsumagoᚋgraphᚋmodelᚐSuma(ctx context.Context, sel ast.SelectionSet, v *model.Suma) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
